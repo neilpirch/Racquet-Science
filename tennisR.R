@@ -1,6 +1,5 @@
 setwd("~/GitHub/tennis_atp")
 temp = list.files(pattern="*.csv")
-myfiles = lapply(temp, read.delim)
 tennis <- do.call(rbind,lapply(temp[1:107],read.csv))
 tennis <- as.data.frame(tennis)
 
