@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>
+<html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Racquet Science Tennis Predictor</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="lib/html5-boilerplate/dist/css/normalize.css">
+    <link rel="stylesheet" href="lib/html5-boilerplate/dist/css/main.css">
+    <link rel="stylesheet" href="app.css">
+    <script src="lib/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+    <script src="lib/angular/angular.js"></script>
+    <script src="lib/angular-route/angular-route.js"></script>
+    <script src="app.js"></script>
+    <script src="core/version/version.js"></script>
+    <script src="core/version/version-directive.js"></script>
+    <script src="core/version/interpolate-filter.js"></script>
+
+    <script>
+        function playerSearch() {
+            // Declare variables
+            var input, filter, ul, li, a, i, txtValue;
+            input = document.getElementById('h2h-search-player-1');
+            filter = input.value.toUpperCase();
+            ul = document.getElementById("playerUL");
+            li = ul.getElementsByTagName('li');
+
+            // Loop through all list items, and hide those who don't match the search query
+            for (i = 0; i < li.length; i++) {
+                a = li[i].getElementsByTagName("a")[0];
+                txtValue = a.textContent || a.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    li[i].style.display = "";
+                } else {
+                    li[i].style.display = "none";
+                }
+            }
+        }
+
+        function myFunction() {
+            document.getElementById("myDropdown").classList.toggle("show");
+        }
+
+        function filterFunction() {
+            var input, filter, ul, li, a, i;
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            div = document.getElementById("myDropdown");
+            a = div.getElementsByTagName("a");
+            for (i = 0; i < a.length; i++) {
+                if (a[i].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    a[i].style.display = "";
+                } else {
+                    a[i].style.display = "none";
+                }
+            }
+        }
+
+
+    </script>
+
+</head>
+<body>
+
+<div ng-view></div>
+<div ng-app="myApp" ng-controller="homeController" ng-init="getPlayerList()">
+    <div class="h2h-search row ">
+        <h4>Head-to-Head Tennis Predictor</h4>
+        <div class="col-sm-5">
+            <input type="text" id="h2h-search-player1" class="form-control" onkeyup="playerSearch()" placeholder="Player 1">
+
+            <ul id="playerUL">
+                <li><a href="#">Adele</a></li>
+                <li><a href="#">Agnes</a></li>
+
+                <li><a href="#">Billy</a></li>
+                <li><a href="#">Bob</a></li>
+
+                <li><a href="#">Calvin</a></li>
+                <li><a href="#">Christina</a></li>
+                <li><a href="#">Cindy</a></li>
+                <li ng-repeat="player in playerList" value={{value.key}}>{{value.firstname}} {{value.lastname}}</li>
+            </ul>
+        </div>
+        <div class="col-sm-2 status-info">
+            vs.
+        </div>
+        <div class="col-sm-5">
+            <input type="text" id='h2h-search-player2' class="form-control" placeholder="Player 2">
+            <input type="text" placeholder="Search.." id="myInput" onclick="myFunction()" onkeyup="filterFunction()">
+
+            <div id="myDropdown" class="dropdown-content">
+                <a href="#about">About</a>
+                <a href="#base">Base</a>
+                <a href="#blog">Blog</a>
+                <a href="#contact">Contact</a>
+                <a href="#custom">Custom</a>
+                <a href="#support">Support</a>
+                <a href="#tools">Tools</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="span7">
+    <div class="widget stacked widget-table action-table">
+
+        <div class="widget-header">
+            <i class="icon-th-list"></i>
+            <h1 style="text-align: center">Head-To-Head Results</h1>
+        </div> <!-- /widget-header -->
+
+        <div class="widget-content">
+            <br>
+            <br>
+
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th style="text-align: left">Date</th>
+                    <th style="text-align: left">Tournament</th>
+                    <th style="text-align: left">Round</th>
+                    <th style="text-align: left">Surface</th>
+                    <th style="text-align: left">Winner</th>
+                    <th style="text-align: left">Loser</th>
+                    <th style="text-align: left">Score</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="match in matchlist">
+                    <td><input type='text' ng-model='match.date'></td>
+                    <td><input type='text' ng-model='match.tournament'></td>
+                    <td><input type='text' ng-model='match.round'></td>
+                    <td><input type='text' ng-model='match.surface'></td>
+                    <td><input type='text' ng-model='match.winner'></td>
+                    <td><input type='text' ng-model='match.loser'></td>
+                    <td><input type='text' ng-model='match.score'></td>
+                </tr>
+                </tbody>
+            </table>
+        </div> <!-- /widget-content -->
+
+    </div> <!-- /widget -->
+</div>
+
+<!-- In production use:
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
+-->
+
+</body>
+</html>
