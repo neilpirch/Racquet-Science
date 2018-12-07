@@ -28,23 +28,35 @@
               <div class="row justify-content-center">
                   <div class="players col-12">
                       <div class="justify-content-center">
+                          <!--
+                          Primary container for everything
+                          -->
                           <div class="img-container">
+                              <!-- Set up the tennis court background so items can be laid on top -->
                               <img class="d-flex shadow-lg bg" src="images/Tennis-Court-Overhead.jpg" style="width:100%;"/>
-
+                              <!-- Spinner to show that the page is loading and not frozen -->
                               <div id="pageLoad" class="loader d-flex" style="position:relative; left:42%;top:100px;"></div>
+
+                              <!-- Begin player information section -->
                               <div class="row" style="top: 20%;position: relative;">
                                   <div class="col-1"></div>
+
+                                  <!-- Display player information in the context of a media object -->
                                   <div id="p1media" class="media col-5 invisible">
                                       <div class="media-left">
+                                          <!-- Image source provided by angular -->
                                           <img class="media-object" src="{{player1Pic}}"/>
                                       </div>
                                       <div class="media-body">
                                           <div class="panel panel-default">
                                               <div class="panel-heading">
+                                                  <!-- Get name from angular variable -->
                                                   <h3 class="panel-title">{{player1name}}</h3>
                                               </div>
                                               <div class="panel-body">
+                                                  <!-- Spinner while loading player specific information -->
                                                   <div id="p1spinner" class="loader-small" style="position:relative;top:50%;left:25%;"></div>
+                                                  <!-- Load data via angular -->
                                                   <div id="p1info" class="invisible">
                                                       Rank: {{p1.rank}}<br>
                                                       Rank Points: {{p1.rankpts}}<br>
@@ -52,17 +64,22 @@
                                                   </div>
                                               </div>
                                           </div>
+                                          <!-- Radial progress bar for indicating probability of win -->
                                           <div id="div1" class="invisible" style="padding-left:20px;"></div>
                                       </div>
                                   </div>
+                                  <!-- Display player information in the context of a media object -->
                                   <div id="p2media" class="media col-5 invisible">
                                       <div class="media-body">
                                           <div class="panel panel-default">
                                               <div class="panel-heading">
+                                                  <!-- Get name from angular variable -->
                                                   <h3 class="panel-title">{{player2name}}</h3>
                                               </div>
                                               <div class="panel-body">
+                                                  <!-- Spinner while loading player specific information -->
                                                   <div id="p2spinner" class="loader-small" style="position:relative;top:50%;left:25%;"></div>
+                                                  <!-- Load data via angular -->
                                                   <div id="p2info" class="invisible">
                                                       Rank: {{p2.rank}}<br>
                                                       Rank Points: {{p2.rankpts}}<br>
@@ -70,29 +87,35 @@
                                                   </div>
                                               </div>
                                           </div>
+                                          <!-- Radial progress bar for indicating probability of win -->
                                           <div id="div2" class="invisible" style="padding-left:20px;"></div>
                                       </div>
                                       <div class="media-right">
+                                          <!-- Image source provided by angular -->
                                           <img class="media-object" src="{{player2Pic}}"/>
                                       </div>
                                   </div>
                                   <div class="col-1"></div>
                               </div>
+                              <!-- Input form and button group -->
                               <div class="button-container col-12" style="position:absolute;width:100%;top:100%;padding-top:20px;">
                                   <div class="row">
+                                      <!-- Left input bar with attached data list for a combobox effect -->
                                       <div class="md-form col-4" style="padding-left:20px;">
                                           <label for="searchBar">
                                               <i class="fa fa-search" aria-hidden="true"></i>
                                           </label>
-                                          <!-- Set the input equal to the angular object query to process the search -->
                                           <input id="searchBar" name="players1" ng-model="player1" type="text" list="players1" style="width:90%;">
                                           <datalist id="players1">
+                                              <!-- Load the players and their ids from an angular array -->
                                               <option ng-repeat="player in playerList" data-id="{{player.id}}" value="{{player.name}}"></option>
                                           </datalist>
                                       </div>
                                       <div class="col-4" style="padding-left:68px;">
+                                          <!-- Button to trigger the probability scoring -->
                                           <button id="evalButton" class="btn-outline-primary disabled" ng-click="calculate()" style="position:absolute;bottom:5%;right:25%;">
                                               <span id="probSpan" style="font-size: 16px;">{{probText}}</span>
+                                              <!-- Spinner to indicate that the server is calculating the probability -->
                                               <i id="probSpinner" class="hide fa fa-spinner fa-spin" style="font-size:24px"></i>
                                           </button>
                                       </div>
@@ -100,9 +123,9 @@
                                           <label for="searchBar2">
                                               <i class="fa fa-search" aria-hidden="true"></i>
                                           </label>
-                                          <!-- Set the input equal to the angular object query to process the search -->
                                           <input id="searchBar2"  name="players2" ng-model="player2" type="text" list="players2"  style="width:90%;">
                                           <datalist id="players2">
+                                              <!-- Load the players and their ids from an angular array -->
                                               <option ng-repeat="player in playerList" data-id="{{player.id}}" value="{{player.name}}"></option>
                                           </datalist>
                                       </div>

@@ -1,5 +1,7 @@
-/**
- * Created by karthik on 7/14/17.
+/*
+* Angular and D3 js for running the compare player page
+*
+*
  */
 var urlPlayer = "https://www.atpworldtour.com/en/-/ajax/playersearch/PlayerUrlSearch?searchTerm=";
 var urlPicture = "https://ws.protennislive.com/api/Atp/PlayerImage?playerId=";
@@ -28,13 +30,15 @@ myapp.controller('homeController',function($scope,$http){
     $scope.p1;
     $scope.p2;
 
+    //Setup the page with a few modifiers to elements
     $("#probSpinner").removeClass("hide");
     $scope.probText="Loading";
-
     $("#evalButton").prop("disabled",true);
     $("#searchBar").prop("disabled",true);
     $("#searchBar2").prop("disabled",true);
 
+    //Checks the input bar to see if it matches the item selected
+    //in the data list.
     $("#searchBar").on('input', function () {
         var val = this.value;
         if($('#players1 option').filter(function(){
@@ -42,15 +46,17 @@ myapp.controller('homeController',function($scope,$http){
         }).length) {
         var value = $('#players1').val();
         //var option = $("[value='" + value + "']");
-        $scope.id1 = $('[value="' + val + '"]').data('id');
-        $scope.player1name = val;
-        $scope.playerSelect(1);
+        $scope.id1 = $('[value="' + val + '"]').data('id'); //get the player's id number from the selection
+        $scope.player1name = val; //write the player name to a scoped variable
+        $scope.playerSelect(1); //get player information
         }else{
             $scope.player1name="";
             $scope.reset1();
         }
     });
 
+    //Checks the input bar to see if it matches the item selected
+    //in the data list.
     $("#searchBar2").on('input', function () {
         var val = this.value;
         if($('#players2 option').filter(function(){
@@ -58,15 +64,16 @@ myapp.controller('homeController',function($scope,$http){
         }).length) {
             var value = $('#players2').val();
             //var option = $("[value='" + value + "']");
-            $scope.id2 = $('[value="' + val + '"]').data('id');
-            $scope.player2name = val;
-            $scope.playerSelect(2);
+            $scope.id2 = $('[value="' + val + '"]').data('id'); //get the player's id number from the selection
+            $scope.player2name = val; //write the player name to a scoped variable
+            $scope.playerSelect(2); //get player information
         }else{
             $scope.player2name="";
             $scope.reset2();
         }
     });
 
+    //Reset elements associated with player1
     $scope.reset1=function(){
         $("#div1").addClass("invisible");
         $("#p1media").addClass("invisible");
@@ -75,6 +82,7 @@ myapp.controller('homeController',function($scope,$http){
         $scope.resetProb()
     };
 
+    //Reset elements associated with player2
     $scope.reset2=function(){
         $("#div2").addClass("invisible");
         $("#p2media").addClass("invisible");
@@ -83,6 +91,7 @@ myapp.controller('homeController',function($scope,$http){
         $scope.resetProb()
     };
 
+    //Reset probability scores and remove the radial progress bars
     $scope.resetProb=function(){
         $("#div1").addClass("invisible");
         $("#div2").addClass("invisible");
@@ -92,6 +101,8 @@ myapp.controller('homeController',function($scope,$http){
         $scope.prob2 = 0;
     }
 
+    //Check to make sure that information for both players exist
+    //before updating and enabling the Evaluate button
     $scope.checkButton=function(){
         if($scope.p1 && $scope.p2){
             $scope.probText = "Evaluate";
@@ -99,10 +110,12 @@ myapp.controller('homeController',function($scope,$http){
         }
     }
 
+    //Get the players and their ids from the database
     $scope.getData=function(){
         var req = $http.get('http://127.0.0.1:8081/get');
         req.success(function(data, status, headers, config) {
             for(dat in data){
+                //Build the array to populate data lists
                 $scope.playerList.push({"name":data[dat].firstname + " " + data[dat].lastname,"id":data[dat].id});
             } data;
             console.log(data);
@@ -118,89 +131,57 @@ myapp.controller('homeController',function($scope,$http){
         });
     };
 
-    $scope.search=function(){
-        var req = $http.get('http://127.0.0.1:8081/players1/'+$scope.lastname+'/'+$scope.firstname);
-        req.success(function(data, status, headers, config) {
-            $scope.playerIds=[];
-            $scope.playerList=[];
-            for(dat in data){
-                $scope.playerList.push({"name":data[dat].firstname + " " + data[dat].lastname,"id":data[dat].id});
-                //$scope.playerIds.push(data[dat].id);
-            } data;
-            console.log(data);
-            console.log($scope.playerList);
-        });
-        req.error(function(data, status, headers, config) {
-            //alert( "failure message: " + JSON.stringify({data: data}));
-        });
-    };
-
+    //Process the player information to return the probability of each winning if they were
+    //to play each other.
     $scope.calculate=function(){
 
+        //Ensure the function will not run until the data had been loaded
         if($scope.probText != "Evaluate") return;
 
+        //Disable the button while processing
         $("#evalButton").prop("disabled",true);
         $("#probSpinner").removeClass("hide");
         $scope.probText="Loading";
 
-      var rankDif1 = $scope.p1.rank - $scope.p2.rank;
-      var rankDif2 = $scope.p2.rank - $scope.p1.rank;
-      var rankptsDif1 = $scope.p1.rankpts - $scope.p2.rankpts;
-      var rankptsDif2 = $scope.p2.rankpts - $scope.p1.rankpts;
+        //Calculate the differences between the players to use with the prediction model
+        var rankDif1 = $scope.p1.rank - $scope.p2.rank;
+        var rankDif2 = $scope.p2.rank - $scope.p1.rank;
+        var rankptsDif1 = $scope.p1.rankpts - $scope.p2.rankpts;
+        var rankptsDif2 = $scope.p2.rankpts - $scope.p1.rankpts;
 
-      var params = JSON.stringify([{"rank":$scope.p1.rank,"rankDif":rankDif1,"age":$scope.p1.age,"rankpts":$scope.p1.rankpts,"rankPtDif":rankptsDif1},
-      {"rank":$scope.p2.rank,"rankDif":rankDif2,"age":$scope.p2.age,"rankpts":$scope.p2.rankpts,"rankPtDif":rankptsDif2}]);
+        //Package the information into a form expected by the model
+        var params = JSON.stringify([{"rank":$scope.p1.rank,"rankDif":rankDif1,"age":$scope.p1.age,"rankpts":$scope.p1.rankpts,"rankPtDif":rankptsDif1},
+        {"rank":$scope.p2.rank,"rankDif":rankDif2,"age":$scope.p2.age,"rankpts":$scope.p2.rankpts,"rankPtDif":rankptsDif2}]);
 
-      var req = $http.post('http://127.0.0.1:8081/calculate',params);
-        req.success(function(data, status, headers, config) {
-            $scope.prob1=data[0];
-            $scope.prob2=data[1];
-            $("#div1").removeClass("invisible");
-            $("#div2").removeClass("invisible");
-            $("#probSpinner").addClass("hide");
-            $scope.probText="Evaluate";
-            $("#evalButton").prop("disabled",false);
-            start();
-            console.log(data);
-            console.log($scope.prob1);
-
-        });
-    };
-
-    $scope.evaluate=function(){
-        if($scope.player1 != "" && $scope.player2 != ""){
-            //let id1 = $('#players1').text();
-            //let id2 = $('#players2').text();
-
-            var value = $('#searchBar').val();
-            //var option = $("[value='" + value + "']");
-            $scope.id1 = $('[value="' + value + '"]').attr('data-id');
-
-            var value2 = $('#searchBar2').val();
-            //var option = $("[value='" + value + "']");
-            $scope.id2 = $('[value="' + value2 + '"]').attr('data-id');
-
-            var req = $http.get('http://127.0.0.1:8081/compare/'+$scope.id1+'/'+$scope.id2);
+        //Send the data to the predict function
+        var req = $http.post('http://127.0.0.1:8081/calculate',params);
             req.success(function(data, status, headers, config) {
-                $scope.prob1=data[0];
-                $scope.prob2=data[1];
+                //Returns 2 probabilities
+                $scope.prob1=data[0]; //player1 prob
+                $scope.prob2=data[1]; //player2 prob
+                //Make the radial progress bars visible
+                $("#div1").removeClass("invisible");
+                $("#div2").removeClass("invisible");
+
+                //Change the button back to normal
+                $("#probSpinner").addClass("hide");
+                $scope.probText="Evaluate";
+                $("#evalButton").prop("disabled",false);
+
+                //Run the D3 to update the radial progress bars
                 start();
                 console.log(data);
                 console.log($scope.prob1);
 
             });
-            req.error(function(data, status, headers, config) {
-                //alert( "failure message: " + JSON.stringify({data: data}));
-            });
+    };
 
-
-        }
-    }
-
+    //Get basic player information
     $scope.playerSelect=function(num){
         let q="";
         let pid=0;
 
+        //Select if player1 or player2
         if(num===1){
             q = $scope.player1name;
             pid = $scope.id1;
@@ -211,12 +192,16 @@ myapp.controller('homeController',function($scope,$http){
 
         if (q != null && q !== "") { //check if there is input in the field to search
 
+            //Get the web player id from the atpworldtour website
+            // which is different from the id in the database
             let handler = $http.get(urlPlayer + q);
             handler.success(function (response) { //if the call was successful
 
                 console.log(response);
                 let id = response.items[0].Value;
-                id = id.split("/")[4];
+                id = id.split("/")[4]; //extract the player id from the returned json
+
+                //use the player id to get the player picture from protennislive.com
                 if (num==1){
                     $scope.player1Pic = urlPicture + id;
                     $("#p1media").removeClass("invisible");
@@ -229,6 +214,7 @@ myapp.controller('homeController',function($scope,$http){
                 alert("There was some error processing your request.")
             });
 
+            //Get the player stats and assign the resulting json to either p1 or p2
             $http.get('http://127.0.0.1:8081/stats/'+pid)
                 .success(function(data){
                     if (num===1){
@@ -245,34 +231,21 @@ myapp.controller('homeController',function($scope,$http){
 
         }
 
-    }
-
-    $scope.delete = function(id,callback){
-
-        $http.get('http://127.0.0.1:8081/delete/'+id)
-            .success(function(data){
-                console.log("Successfully deleted");
-                $scope.getData();
-            });
     };
 
+/*
+* The below D3 code runs the radial progress bars and was obtained via Brightpoint.
+* http://www.brightpointinc.com/download/radial-progress-source-code/
+*
+ */
 
-    $scope.update = function(book,callback){
-
-        $http.get('http://127.0.0.1:8081/update/'+book._id,{params:book})
-            .success(function(data){
-                console.log("Successfully updated");
-                $scope.getData();
-            });
-    };
-
+    //Get references to the elements where the bars will go
     var div1=d3.select(document.getElementById('div1'));
     var div2=d3.select(document.getElementById('div2'));
-    var div3=d3.select(document.getElementById('div3'));
-    var div4=d3.select(document.getElementById('div4'));
 
     start();
 
+    //Set up and render the progress bars
     function start() {
 
         var rp1 = radialProgress(document.getElementById('div1'))
@@ -300,9 +273,6 @@ myapp.controller('homeController',function($scope,$http){
             _diameter = 150,
             _label="",
             _fontSize=10;
-
-
-        var _mouseClick;
 
         var _value= 0,
             _minValue = 0,
