@@ -1,0 +1,82 @@
+.img-container {
+    position:relative;
+    width:770px;
+    height:440px;
+}
+
+.bg{
+    position:absolute;
+    top:0;
+    left:0;
+    z-index: -1;
+}
+
+.bar{
+    top:100%;
+}
+
+.hide {
+    display: none;
+}
+
+.players {
+    top: 153px;
+}
+
+.button-container{
+    bottom: 67%;
+    position: absolute;
+}
+
+#test .arc2 {
+    stroke-weight:0.1;
+    fill: #3660b0;
+}
+
+#div1, #div2, #div3, #div4 {
+   width:100%;
+    fill: #3660b0;
+}
+
+
+#div1 #div2 .arc {
+    stroke-weight: 0.1;
+    fill: #1d871b;
+}
+
+.loader {
+    position: absolute;
+    border: 16px solid #aeaeae; /* Light grey */
+    border-top: 16px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+    top:50%;
+    left:50%;
+}
+
+.loader-small {
+    border: 9px solid #aeaeae; /* Light grey */
+    border-top: 9px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+}
+
+.loader-mini {
+    border: 9px solid #aeaeae; /* Light grey */
+    border-top: 9px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+

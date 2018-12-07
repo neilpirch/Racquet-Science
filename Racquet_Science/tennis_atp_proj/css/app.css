@@ -1,0 +1,57 @@
+body{
+    background-color: #ffffff;
+    height: 100%;
+    overflow: hidden;
+}
+
+.box{
+    position: absolute;
+    text-align: center;
+    vertical-align: center;
+    width: 100%;
+    line-height: 40px;
+    font-weight: 400;
+    margin: 0 0 10px;
+    border: 0;
+    padding: 0 14px;
+    outline: 0;
+    color: #000000;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border-radius: 15px;
+}
+
+.grid{
+    padding-top: 30px;
+}
+
+.player1{
+    background: #2aabd2;
+}
+
+.player2{
+    background: #94FD90;
+}
+
+.player3{
+    background: #f0ad4e;
+}
+
+.player4{
+    background: #b92c28;
+}
+
+.player5{
+    background: #ffff00;
+}
+
+.button-wrapper {
+    background: darkorange;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.middle {
+    display: table-cell;
+    vertical-align: middle;
+}

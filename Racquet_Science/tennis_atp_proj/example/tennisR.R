@@ -1,4 +1,4 @@
-setwd("~/GitHub/tennis_atp")
+setwd("C:\\Users\\Dave\\Documents\\GitHub\\tennis_atp")
 temp = list.files(pattern="*.csv")
 tennis <- do.call(rbind,lapply(temp[1:107],read.csv))
 tennis <- as.data.frame(tennis)
