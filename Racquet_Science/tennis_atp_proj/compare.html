@@ -129,6 +129,46 @@
                                               <option ng-repeat="player in playerList" data-id="{{player.id}}" value="{{player.name}}"></option>
                                           </datalist>
                                       </div>
+                                      <div class="col-12" id="recentTable" style = "display:none">
+                                          <div class="widget stacked widget-table action-table">
+
+                                              <div class="widget-header">
+                                                  <i class="icon-th-list"></i>
+                                                  <h1 style="text-align: center">Recent Results</h1>
+                                              </div> <!-- /widget-header -->
+
+                                              <div class="widget-content">
+                                                  <br>
+                                                  <br>
+
+                                                  <table class="table table-striped table-bordered">
+                                                      <thead>
+                                                      <tr>
+                                                          <th style="text-align: left">Date</th>
+                                                          <th style="text-align: left">Tournament</th>
+                                                          <th style="text-align: left">Round</th>
+                                                          <th style="text-align: left">Surface</th>
+                                                          <th style="text-align: left">Winner</th>
+                                                          <th style="text-align: left">Loser</th>
+                                                          <th style="text-align: left">Score</th>
+                                                      </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                      <tr ng-repeat="match in matchList">
+                                                          <td><input type='text' ng-model='match.date'></td>
+                                                          <td><input type='text' ng-model='match.tournament'></td>
+                                                          <td><input type='text' ng-model='match.round'></td>
+                                                          <td><input type='text' ng-model='match.surface'></td>
+                                                          <td><input type='text' ng-model='match.winner'></td>
+                                                          <td><input type='text' ng-model='match.loser'></td>
+                                                          <td><input type='text' ng-model='match.score'></td>
+                                                      </tr>
+                                                      </tbody>
+                                                  </table>
+                                              </div> <!-- /widget-content -->
+
+                                          </div> <!-- /widget -->
+                                      </div>
                                   </div>
                               </div>
                           </div>
@@ -138,6 +178,9 @@
           </div>
           <div class="col-1"></div>
       </div>
+
   </div>
+
+
   </body>
 </html>

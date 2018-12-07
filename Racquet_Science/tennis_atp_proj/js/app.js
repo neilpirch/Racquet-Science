@@ -153,27 +153,38 @@ myapp.controller('homeController',function($scope,$http){
         var params = JSON.stringify([{"rank":$scope.p1.rank,"rankDif":rankDif1,"age":$scope.p1.age,"rankpts":$scope.p1.rankpts,"rankPtDif":rankptsDif1},
         {"rank":$scope.p2.rank,"rankDif":rankDif2,"age":$scope.p2.age,"rankpts":$scope.p2.rankpts,"rankPtDif":rankptsDif2}]);
 
+        var playerIds = JSON.stringify([{"player1":$scope.p1.id, "player2":$scope.p2.id}]);
+
+        //Send player IDs to getMatches function
+        var reqMatch = $http.post('http://127.0.0.1:8081/matches', playerIds);
+        reqMatch.success(function(data, status, headers, config) {
+            //Returns list of matches
+            $scope.matchList = data;
+            document.getElementById("recentTable").style.display = "block"
+
+            console.log(data);
+        });
         //Send the data to the predict function
-        var req = $http.post('http://127.0.0.1:8081/calculate',params);
-            req.success(function(data, status, headers, config) {
-                //Returns 2 probabilities
-                $scope.prob1=data[0]; //player1 prob
-                $scope.prob2=data[1]; //player2 prob
-                //Make the radial progress bars visible
-                $("#div1").removeClass("invisible");
-                $("#div2").removeClass("invisible");
-
-                //Change the button back to normal
-                $("#probSpinner").addClass("hide");
-                $scope.probText="Evaluate";
-                $("#evalButton").prop("disabled",false);
-
-                //Run the D3 to update the radial progress bars
-                start();
-                console.log(data);
-                console.log($scope.prob1);
-
-            });
+        // var req = $http.post('http://127.0.0.1:8081/calculate',params);
+        //     req.success(function(data, status, headers, config) {
+        //         //Returns 2 probabilities
+        //         $scope.prob1=data[0]; //player1 prob
+        //         $scope.prob2=data[1]; //player2 prob
+        //         //Make the radial progress bars visible
+        //         $("#div1").removeClass("invisible");
+        //         $("#div2").removeClass("invisible");
+        //
+        //         //Change the button back to normal
+        //         $("#probSpinner").addClass("hide");
+        //         $scope.probText="Evaluate";
+        //         $("#evalButton").prop("disabled",false);
+        //
+        //         //Run the D3 to update the radial progress bars
+        //         start();
+        //         console.log(data);
+        //         console.log($scope.prob1);
+        //
+        //     });
     };
 
     //Get basic player information

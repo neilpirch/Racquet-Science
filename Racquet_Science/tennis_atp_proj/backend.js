@@ -30,7 +30,7 @@ app.get('/stats/:id1',function(req,res){
                 res.end();
             }
         }
-        var tennisDB = client.db('tennis');
+        var tennisDB = client.db('atp_tennis');
         var tempJson = {};
         var age = 0;
         var id1 = req.params.id1-0; //convert the string id to integer
@@ -64,11 +64,43 @@ app.get('/stats/:id1',function(req,res){
     });
 });
 
+function getMatches(player1, player2, res) {
+    MongoClient.connect(url, function (err, client) {
+        if(err)
+        {
+            res.write("Failed, Error while connecting to Database");
+            res.end();
+        }
+
+        db.collection('matches').find({or:[{"winner_id": {"$in": [player1, player2]}},
+                {"loser_id":{"$in": [player1, player2]}}]})
+            .sort({"date": -1}).limit(20).toArray(function(err, result){
+            if(err)
+            {
+                res.write("get Failed");
+                res.end();
+            }else
+            {
+
+                res.send(JSON.stringify(result));
+            }
+            console.log("Got All Matches");
+
+        });
+    });
+}
+
 //Recieve a formatted JSON to send to R for prediction
 app.post('/calculate', function(req,res){
-   var players = req.body;
+    var players = req.body;
 
-   predict(players,res);
+    predict(players,res);
+});
+app.post('/matches', function(req,res){
+    var player1 = req.body.player1;
+    var player2 = req.body.player2;
+
+    getMatches(player1, player2, res);
 });
 
 //Process a JSON to return a probability of winning
@@ -130,7 +162,7 @@ app.get('/get', function (req, res) {
                 res.end();
             }
         }
-        var tennisDB = client.db('tennis');
+        var tennisDB = client.db('atp_tennis');
 
         tennisDB.collection('players').find().toArray(function(err, result) {
             if (err) {
