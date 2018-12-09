@@ -173,6 +173,18 @@ myapp.controller('homeController',function($scope,$http){
                 console.log(data);
                 console.log($scope.prob1);
 
+                //Send player IDs to getMatches function
+                var player1 = $scope.id1;
+                var player2 = $scope.id2;
+                var reqMatch = $http.get('http://127.0.0.1:8081/matches/'+ player1 + '/' +  player2);
+                reqMatch.success(function(data, status, headers, config) {
+                    //Returns list of matches
+                    $scope.matchList = data;
+                    document.getElementById("recentTable").style.display = "block";
+
+                    console.log(data);
+                });
+
             });
     };
 

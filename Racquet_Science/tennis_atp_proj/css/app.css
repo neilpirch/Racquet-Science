@@ -55,3 +55,7 @@ body{
     display: table-cell;
     vertical-align: middle;
 }
+
+th {
+    text-align: left;
+}

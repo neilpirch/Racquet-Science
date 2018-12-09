@@ -90,6 +90,39 @@ function predict(tennis,res){
         });
 }
 
+app.get('/matches/:player1/:player2', function(req,res){
+    var p1 = req.params.player1-0;
+    var p2 = req.params.player2-0;
+
+    getMatches(p1, p2, res);
+});
+
+// find most recent 20 matches that player1 or player2 participated in
+function getMatches(player1, player2, res) {
+    MongoClient.connect(url, function (err, client) {
+        if(err)
+        {
+            res.write("Failed, Error while connecting to Database");
+            res.end();
+        }
+        var tennisDB = client.db('tennis');
+
+        tennisDB.collection('matches').find({"winner_id": {"$in": [player1, player2]}},
+            {"loser_id":{"$in": [player1, player2]}})
+            .sort({"tourney_date": -1}).limit(20).toArray(function(err, result){
+            if(err)
+            {
+                res.write("get Failed");
+                res.end();
+            }else
+            {
+                res.send(JSON.stringify(result));
+            }
+            console.log("Got All Matches");
+        });
+    });
+}
+
 function CalcAge(birthdate) {
 
     //Convert the birthdate to a string and subsequently to a Date object
