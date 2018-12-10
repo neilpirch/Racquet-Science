@@ -208,19 +208,26 @@ myapp.controller('homeController',function($scope,$http){
 
             //Get the web player id from the atpworldtour website
             // which is different from the id in the database
+            // **added method to prevent confusion between similarly named people
             let handler = $http.get(urlPlayer + q);
             handler.success(function (response) { //if the call was successful
 
+                $scope.id = "Z007";
                 console.log(response);
-                let id = response.items[0].Value;
-                id = id.split("/")[4]; //extract the player id from the returned json
+                angular.forEach(response, function(values){
+                    angular.forEach(values, function(item){
+                        if(item.Key === q){
+                            $scope.id = item.Value.split("/")[4]; //extract the player id from the returned json
+                        }
+                    });
+                });
 
                 //use the player id to get the player picture from protennislive.com
                 if (num==1){
-                    $scope.player1Pic = urlPicture + id;
+                    $scope.player1Pic = urlPicture + $scope.id;
                     $("#p1media").removeClass("invisible");
                 }else{
-                    $scope.player2Pic = urlPicture + id;
+                    $scope.player2Pic = urlPicture + $scope.id;
                     $("#p2media").removeClass("invisible");
                 }
             });
