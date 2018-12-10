@@ -20,7 +20,8 @@
 }
 
 .players {
-    top: 153px;
+    position:absolute;
+    top: 10%;
 }
 
 .button-container{
