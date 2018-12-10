@@ -99,12 +99,26 @@ myapp.controller('homeController',function($scope,$http){
         $("#evalButton").prop("disabled",true);
         $scope.prob1 = 0;
         $scope.prob2 = 0;
+        document.getElementById("recentTable").style.display = "none";
     }
 
     //Check to make sure that information for both players exist
     //before updating and enabling the Evaluate button
     $scope.checkButton=function(){
         if($scope.p1 && $scope.p2){
+
+            var player1 = $scope.id1;
+            var player2 = $scope.id2;
+
+            //Send player IDs to getMatches function
+            var reqMatch = $http.get('http://127.0.0.1:8081/matches/'+ player1 + '/' +  player2);
+            reqMatch.success(function(data, status, headers, config) {
+                //Returns list of matches
+                $scope.matchList = data;
+                document.getElementById("recentTable").style.display = "block";
+
+                console.log(data);
+            });
             $scope.probText = "Evaluate";
             $("#evalButton").prop("disabled",false);
         }
@@ -149,9 +163,6 @@ myapp.controller('homeController',function($scope,$http){
         var rankptsDif1 = $scope.p1.rankpts - $scope.p2.rankpts;
         var rankptsDif2 = $scope.p2.rankpts - $scope.p1.rankpts;
 
-        var player1 = $scope.id1;
-        var player2 = $scope.id2;
-
         //Package the information into a form expected by the model
         var params = JSON.stringify([{"rank":$scope.p1.rank,"rankDif":rankDif1,"age":$scope.p1.age,"rankpts":$scope.p1.rankpts,"rankPtDif":rankptsDif1},
         {"rank":$scope.p2.rank,"rankDif":rankDif2,"age":$scope.p2.age,"rankpts":$scope.p2.rankpts,"rankPtDif":rankptsDif2}]);
@@ -175,17 +186,6 @@ myapp.controller('homeController',function($scope,$http){
                 start();
                 console.log(data);
                 console.log($scope.prob1);
-
-                //Send player IDs to getMatches function
-
-                var reqMatch = $http.get('http://127.0.0.1:8081/matches/'+ player1 + '/' +  player2);
-                reqMatch.success(function(data, status, headers, config) {
-                    //Returns list of matches
-                    $scope.matchList = data;
-                    document.getElementById("recentTable").style.display = "block";
-
-                    console.log(data);
-                });
 
             });
     };
